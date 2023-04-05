@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import web.dao.CarDaoImpl;
+import web.service.CarService;
 import web.service.CarServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,21 +16,18 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 @RequestMapping("/cars")
 public class CarController {
-    private CarServiceImpl carService;
+    private CarService carService;
     @Autowired
     public CarController(CarServiceImpl carService) {
         this.carService = carService;
     }
-    @GetMapping("")
+    @GetMapping
     public String getCarCount(HttpServletRequest request, Model model) {
-        int count = 0;
         if (request.getParameter("count")==null) {
-            count = count;
+            model.addAttribute("carCount", carService.getCars());
         } else {
-            count = Integer.parseInt(request.getParameter("count"));
+            model.addAttribute("carCount", carService.getCarCount(Integer.parseInt(request.getParameter("count"))));
         }
-       model.addAttribute("carCount", carService.getCarCount(count));
-
         return "carCount";
     }
 }
